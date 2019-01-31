@@ -2,6 +2,7 @@
 package bfst19.addressparser;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,15 +42,35 @@ public class Address {
 	public String postcode() { return postcode; }
 	public String city()     { return city; }
 
-	final static String regex = "(?<street>[A-Za-z ]+) (?<house>[0-9])";
-	final static Pattern pattern = Pattern.compile(regex);
+	final static String[] regex = {
+			"^ *(?<street>[A-Za-z ]+?) +(?<house>[0-9]+) *$",
+			"^ *(?<street>[A-Za-z ]+?) +(?<house>[0-9]+)[ ,]+(?<postcode>[0-9]{4}) +(?<city>[æøåÆØÅA-Za-z ]+?) *$"
+	};
+
+	final static Pattern[] patterns =
+			Arrays.stream(regex).map(Pattern::compile).toArray(Pattern[]::new);
+
+	private static void tryExtract(Matcher m, String group, Consumer<String> c) {
+		try {
+			c.accept(m.group(group));
+		} catch (IllegalArgumentException e) {
+			// Uncle Bob is going to kill me... ignore
+		}
+	}
 
 	public static Address parse(String s) {
 		Builder b = new Builder();
-		Matcher match = pattern.matcher(s);
-		if (match.matches()) {
-			b.street(match.group("street"))
-				.house(match.group("house"));
+		for (Pattern pattern : patterns) {
+			Matcher match = pattern.matcher(s);
+			if (match.matches()) {
+				tryExtract(match, "street", b::street);
+				tryExtract(match, "house", b::house);
+				tryExtract(match, "floor", b::floor);
+				tryExtract(match, "side", b::side);
+				tryExtract(match, "postcode", b::postcode);
+				tryExtract(match, "city", b::city);
+				return b.build();
+			}
 		}
 		return b.build();
 	}
