@@ -2,6 +2,8 @@
 package bfst19.addressparser;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Address {
 	private final String street, house, floor, side, postcode, city;
@@ -39,8 +41,16 @@ public class Address {
 	public String postcode() { return postcode; }
 	public String city()     { return city; }
 
+	final static String regex = "(?<street>[A-Za-z ]+) (?<house>[0-9])";
+	final static Pattern pattern = Pattern.compile(regex);
+
 	public static Address parse(String s) {
 		Builder b = new Builder();
+		Matcher match = pattern.matcher(s);
+		if (match.matches()) {
+			b.street(match.group("street"))
+				.house(match.group("house"));
+		}
 		return b.build();
 	}
 }
