@@ -10,12 +10,8 @@ import javafx.stage.Stage;
 public class Main extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
-		Label label = new Label("Line drawing!!!");
-		BorderPane pane = new BorderPane(label);
-		Scene scene = new Scene(pane);
-		stage.setScene(scene);
-		stage.setMinWidth(640);
-		stage.setMinHeight(480);
-		stage.show();
+		Model model = new Model(getParameters().getRaw());
+		View view = new FancyView(model, stage);
+		Controller controller = new Controller(model, view);
 	}
 }

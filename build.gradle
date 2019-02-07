@@ -46,3 +46,7 @@ jar {
 tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
+
+run {
+    args = [ 'data/lines8.txt', 'data/out.txt']
+}
