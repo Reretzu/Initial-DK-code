@@ -9,6 +9,5 @@ public class Main extends Application {
 	public void start(Stage stage) throws Exception {
 		Model model = new Model(getParameters().getRaw());
 		View view = new View(model, stage);
-		Controller controller = new Controller(model, view);
 	}
 }
