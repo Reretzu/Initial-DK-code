@@ -48,5 +48,5 @@ tasks.withType(JavaCompile) {
 }
 
 run {
-    args = ['data/lines8.txt' ]
+    args = ['data/small.osm' ]
 }

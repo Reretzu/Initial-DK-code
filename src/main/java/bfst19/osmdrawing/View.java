@@ -20,6 +20,7 @@ public class View {
 	Model model;
 
 	public View(Model model, Stage stage) {
+		transform.appendScale(0.56,-1);
 		this.stage = stage;
 		this.model = model;
 		stage.widthProperty().addListener((obj, oldvalue, newvalue) -> {
@@ -41,12 +42,8 @@ public class View {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		gc.setTransform(transform);
 		gc.setStroke(Color.BLACK);
-		for (Line line : model) {
-			gc.beginPath();
-			gc.moveTo(line.x1, line.y1);
-			gc.lineTo(line.x2, line.y2);
-			gc.stroke();
-		}
+		gc.setLineWidth(1/Math.sqrt(Math.abs(transform.determinant())));
+		for (OSMWay way : model) way.stroke(gc);
 	}
 
 	public void pan(double dx, double dy) {
@@ -54,8 +51,7 @@ public class View {
 		repaint();
 	}
 
-	public void zoom(double deltaY, double x, double y) {
-		double factor = Math.pow(1.001, deltaY);
+	public void zoom(double factor, double x, double y) {
 		transform.prependScale(factor, factor, x, y);
 		repaint();
 	}

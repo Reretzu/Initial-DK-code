@@ -28,7 +28,8 @@ public class Controller {
 			y = e.getY();
 		});
 		view.scene.setOnScroll(e -> {
-			view.zoom(e.getDeltaY(), e.getX(), e.getY());
+			double factor = Math.pow(1.01, e.getDeltaY());
+			view.zoom(factor, e.getX(), e.getY());
 		});
 	}
 }
