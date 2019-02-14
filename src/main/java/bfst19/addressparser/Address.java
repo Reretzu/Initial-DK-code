@@ -42,6 +42,7 @@ public class Address {
 	public String postcode() { return postcode; }
 	public String city()     { return city; }
 
+
 	final static String[] regex = {
 			"^ *(?<street>[A-Za-z ]+?) +(?<house>[0-9]+) *$",
 			"^ *(?<street>[A-Za-z ]+?) +(?<house>[0-9]+)[ ,]+(?<postcode>[0-9]{4}) +(?<city>[æøåÆØÅA-Za-z ]+?) *$"
@@ -51,10 +52,9 @@ public class Address {
 			Arrays.stream(regex).map(Pattern::compile).toArray(Pattern[]::new);
 
 	private static void tryExtract(Matcher m, String group, Consumer<String> c) {
-		try {
+		String pattern = ".*\\(\\?\\<("+group+")\\>.*";
+		if (m.pattern().pattern().matches(pattern)) {
 			c.accept(m.group(group));
-		} catch (IllegalArgumentException e) {
-			// Uncle Bob is going to kill me... ignore
 		}
 	}
 

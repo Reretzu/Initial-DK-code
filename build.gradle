@@ -20,7 +20,7 @@ javafx {
 }
 
 // Define the main class for the application
-mainClassName = 'bfst19.linedrawing.Main'
+mainClassName = 'bfst19.osmdrawing.Main'
 
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
@@ -48,5 +48,5 @@ tasks.withType(JavaCompile) {
 }
 
 run {
-    args = [ 'data/lines8.txt', 'data/out.txt']
+    args = ['data/lines8.txt' ]
 }
