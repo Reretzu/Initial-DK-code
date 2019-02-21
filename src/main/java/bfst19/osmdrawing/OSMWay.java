@@ -3,25 +3,25 @@ package bfst19.osmdrawing;
 import javafx.scene.canvas.GraphicsContext;
 
 import java.util.ArrayList;
+import java.util.function.LongSupplier;
 
-public class OSMWay extends ArrayList<OSMNode> {
-	public void stroke(GraphicsContext gc) {
-		trace(gc);
-		gc.stroke();
+public class OSMWay extends ArrayList<OSMNode> implements LongSupplier {
+	long id;
+
+	public OSMWay(long id) {
+		this.id = id;
 	}
 
-	private void trace(GraphicsContext gc) {
-		gc.beginPath();
-		OSMNode first = get(0);
-		gc.moveTo(first.getLon(), first.getLat());
-		for (int i = 1 ; i < size() ; i++) {
-			OSMNode cur = get(i);
-			gc.lineTo(cur.getLon(), cur.getLat());
-		}
+	@Override
+	public long getAsLong() {
+		return id;
 	}
 
-	public void fill(GraphicsContext gc) {
-		trace(gc);
-		gc.fill();
+	public OSMNode getFirst() {
+		return get(0);
+	}
+
+	public OSMNode getLast() {
+		return get(size()-1);
 	}
 }

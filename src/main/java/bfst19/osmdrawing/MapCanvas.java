@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.FillRule;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 import javafx.stage.Stage;
@@ -19,7 +20,7 @@ public class MapCanvas extends Canvas {
 		this.model = model;
 		pan(-model.minlon, -model.maxlat);
 		zoom(800/(model.maxlon-model.minlon), 0,0);
-		transform.prependScale(0.56,-1, 0, 0);
+		transform.prependScale(1,-1, 0, 0);
 		model.addObserver(this::repaint);
 		model.addObserver(this::repaint);
 		repaint();
@@ -27,14 +28,22 @@ public class MapCanvas extends Canvas {
 
 	public void repaint() {
 		gc.setTransform(new Affine());
-		gc.clearRect(0, 0, getWidth(), getHeight());
+		if (model.getWaysOfType(WayType.COASTLINE).iterator().hasNext()) {
+			gc.setFill(Color.BLUE);
+		} else {
+			gc.setFill(Color.GREEN);
+		}
+		gc.fillRect(0, 0, getWidth(), getHeight());
 		gc.setTransform(transform);
 		gc.setStroke(Color.BLACK);
 		gc.setLineWidth(1/Math.sqrt(Math.abs(transform.determinant())));
-		for (OSMWay way : model.getWaysOfType(WayType.UNKNOWN)) way.stroke(gc);
-		gc.setFill(Color.RED);
-		for (OSMWay way : model.getWaysOfType(WayType.BUILDING)) way.fill(gc);
-		for (OSMWay way : model.getWaysOfType(WayType.BUILDING)) way.stroke(gc);
+//		for (Drawable way : model.getWaysOfType(WayType.UNKNOWN)) way.stroke(gc);
+		gc.setFillRule(FillRule.EVEN_ODD);
+		gc.setFill(Color.GREEN);
+		for (Drawable way : model.getWaysOfType(WayType.COASTLINE)) way.fill(gc);
+		for (Drawable way : model.getWaysOfType(WayType.COASTLINE)) way.stroke(gc);
+		gc.setFill(Color.BLUE);
+		for (Drawable way : model.getWaysOfType(WayType.WATER)) way.fill(gc);
 	}
 
 	public void pan(double dx, double dy) {

@@ -1,7 +1,10 @@
 package bfst19.osmdrawing;
 
-public class OSMNode {
+import java.util.function.LongSupplier;
+
+public class OSMNode implements LongSupplier {
 	private float lat, lon;
+	private long id;
 
 	public float getLat() {
 		return lat;
@@ -11,8 +14,13 @@ public class OSMNode {
 		return lon;
 	}
 
-	public OSMNode(float lon, float lat) {
+	public OSMNode(long id, float lon, float lat) {
+		this.id = id;
 		this.lat = lat;
 		this.lon = lon;
+	}
+
+	public long getAsLong() {
+		return id;
 	}
 }

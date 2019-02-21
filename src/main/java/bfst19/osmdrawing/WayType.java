@@ -1,5 +1,5 @@
 package bfst19.osmdrawing;
 
 public enum WayType {
-	UNKNOWN, BUILDING;
+	UNKNOWN, BUILDING, WATER, COASTLINE;
 }
